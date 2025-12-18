@@ -1,0 +1,14 @@
+/.vs/
+/out/
+
+/CMakeSettings.json
+
+*.lib
+*.a
+
+*.dll
+*.so
+*.dylib
+
+*.obj
+*.o
