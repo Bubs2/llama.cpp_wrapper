@@ -76,6 +76,6 @@ int main() {
 
 ## Roadmap
 - [ ] **Decoupled Architecture**: Separate `HistoryManager` from `LlamaSession` to enable flexible context resizing and independent history management (e.g., switching sessions/models while keeping chat history).
-- [ ] **Dynamic History Persistence**: Implement on-disk caching for `HistoryManager to` handle long conversations with minimal RAM usage.
+- [ ] **Dynamic History Persistence**: Implement on-disk caching for `HistoryManager` to handle long conversations with minimal RAM usage.
 - [ ] **Message Editing**: Modify existing messages and tools in the history.
 - [ ] **KV Cache Persistence**: Save/load raw KV cache state (Low priority).
