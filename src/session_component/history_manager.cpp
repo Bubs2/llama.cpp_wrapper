@@ -69,6 +69,7 @@ namespace llama_server {
 				head_prompt_size_++;
 			}
 			void add_tool(common_chat_tool tool) { tools_.emplace_back(std::move(tool)); }
+			void set_head_prompt_size(size_t size) { head_prompt_size_ = size; }
 			size_t get_message_size() const { return messages_.size(); }
 			size_t get_head_prompt_size() const { return head_prompt_size_; }
 			std::vector<common_chat_msg>& get_messages_ref() { return messages_; }
@@ -200,7 +201,7 @@ namespace llama_server {
 				.content = std::move(msg.content),
 			},
 			is_head_prompt
-			);
+		);
 		if (!is_head_prompt) {
 			size_t pos = message_manager_->get_message_size() - 1;
 			estimate_msg_info(pos);
@@ -258,6 +259,7 @@ namespace llama_server {
 				msg_token_counts_.pop_back();
 				messages_ref.pop_back();
 			}
+			message_manager_->set_head_prompt_size(messages_ref.size());
 
 			return;
 		}

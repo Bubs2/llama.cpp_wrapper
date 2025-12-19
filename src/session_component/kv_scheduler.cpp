@@ -99,8 +99,14 @@ namespace llama_server::internal {
 		prev_chunks_info_.resize(kept_chunks);
 		prev_chunks_info_.reserve(chunks.size());
 
-		// Low priority: Try to keep the partially matched text chunk.
-		for (auto& chunk : chunks | std::views::drop(kept_chunks)) {
+		if (last_keep != 0) {
+			auto& chunk = chunks[kept_chunks];
+			auto& tokens = chunk->text_tokens;
+			auto& prev_tokens = prev_chunks_info_[kept_chunks].tokens;
+			prev_tokens.insert(prev_tokens.end(), tokens.begin() + last_keep, tokens.end());
+		}
+
+		for (auto& chunk : chunks | std::views::drop(kept_chunks + (last_keep != 0))) {
 			auto chunk_type = chunk->type;
 
 			if (chunk_type == IMAGE || chunk_type == AUDIO) {
@@ -112,6 +118,8 @@ namespace llama_server::internal {
 				prev_chunks_info_.emplace_back(ChunkInfo{ chunk_type, std::string(), tokens });
 			}
 		}
+
+		log_info(std::format("KV Cache used: {}", context_->get_used_memory()));
 	}
 
 	void KVScheduler::clear() {
