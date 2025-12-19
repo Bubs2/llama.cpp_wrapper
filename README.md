@@ -65,7 +65,7 @@ int main() {
     session->generate({
         .max_tokens = 512,
         .stream = true,
-        .output_callback = [](std::string&& piece) { std::cout << piece << std::flush; return true }
+        .output_callback = [](std::string&& piece) { std::cout << piece << std::flush; return true; }
     });
     
     server.shutdown();
