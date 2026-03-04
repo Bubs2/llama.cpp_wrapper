@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
 	tail_msgs.emplace_back(
 		Message{
 			.role = "user",
-			.content = "这里有一张图片：<__path:./image/prac_back.png__>"
+			.content = "这里有一张图片：<__path:./image/frame.ppm__>"
 		}
 	);
 

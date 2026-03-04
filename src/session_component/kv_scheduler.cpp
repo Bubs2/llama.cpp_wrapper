@@ -95,13 +95,16 @@ namespace llama_server::internal {
 		}
 
 		// Update previous chunks info.
-		prev_chunks_info_.resize(kept_chunks);
+		prev_chunks_info_.resize(kept_chunks + (last_keep != 0));
 		prev_chunks_info_.reserve(chunks.size());
 
 		if (last_keep != 0) {
 			auto& chunk = chunks[kept_chunks];
 			auto& tokens = chunk->text_tokens;
 			auto& prev_tokens = prev_chunks_info_[kept_chunks].tokens;
+
+			prev_tokens.resize(last_keep);
+			prev_tokens.reserve(tokens.size());
 			prev_tokens.insert(prev_tokens.end(), tokens.begin() + last_keep, tokens.end());
 		}
 
@@ -112,7 +115,6 @@ namespace llama_server::internal {
 				prev_chunks_info_.emplace_back(ChunkInfo{ chunk_type, chunk->id, std::vector<llama_token>() });
 			}
 			else if (chunk_type == TEXT) {
-				size_t n_tokens;
 				auto& tokens = chunk->text_tokens;
 				prev_chunks_info_.emplace_back(ChunkInfo{ chunk_type, std::string(), tokens });
 			}

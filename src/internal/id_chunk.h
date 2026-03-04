@@ -42,15 +42,16 @@ namespace llama_server::internal {
 			}
 
 			for (auto idx : std::views::iota((size_t)0, n_chunks)) {
-				size_t n_tokens;
 				const llama_token* tokens = mtmd_input_chunk_get_tokens_text(mtmd_input_chunks_get(this->chunks.get(), idx), &n_tokens);
 				text_tokens.insert(text_tokens.end(), tokens, tokens + n_tokens);
 			}
 			type = TEXT;
 		}
 		explicit IDChunks(std::vector<llama_token> tokens)
-			: text_tokens(std::move(tokens))
-		{ type = TEXT; n_tokens = text_tokens.size(); }
+			: id(std::string()), text_tokens(std::move(tokens))
+		{
+			type = TEXT; n_tokens = text_tokens.size();
+		}
 
 		IDChunks(IDChunks&&) = default;
 		IDChunks& operator=(IDChunks&&) = default;
