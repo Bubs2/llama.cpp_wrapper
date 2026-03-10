@@ -38,7 +38,8 @@ namespace llama_server::internal {
 			std::vector<common_chat_msg>&& head_msgs,
 			std::vector<common_chat_msg>&& tail_msgs,
 			std::vector<common_chat_tool>&& tools,
-			size_t max_tokens
+			size_t max_tokens,
+			bool add_generation_prompt
 		);
 
 		size_t get_used_messages_cache();
@@ -64,7 +65,8 @@ namespace llama_server::internal {
 			std::vector<common_chat_msg>&& head_msgs,
 			std::vector<common_chat_msg>&& tail_msgs,
 			std::vector<common_chat_tool>&& tools,
-			size_t max_tokens
+			size_t max_tokens,
+			bool add_generation_prompt
 		);
 	};
 

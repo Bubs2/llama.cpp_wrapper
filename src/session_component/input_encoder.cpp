@@ -64,11 +64,13 @@ namespace llama_server::internal {
 		std::vector<common_chat_msg>&& head_msgs,
 		std::vector<common_chat_msg>&& tail_msgs,
 		std::vector<common_chat_tool>&& tools,
-		size_t max_tokens
+		size_t max_tokens,
+		bool add_generation_prompt
 	) {
 		if (image_chunks_cache_.size() > 16) image_chunks_cache_.clear(); // Temporary simple cache eviction
 
-		common_chat_templates_inputs input = prune_with_precache(std::move(head_msgs), std::move(tail_msgs), std::move(tools), max_tokens);
+		common_chat_templates_inputs input = prune_with_precache(
+			std::move(head_msgs), std::move(tail_msgs), std::move(tools), max_tokens, add_generation_prompt);
 		chat_params_cache_ = templater_(input);
 		used_messages_cache_ = input.messages.size();
 
@@ -146,13 +148,14 @@ namespace llama_server::internal {
 		std::vector<common_chat_msg>&& head_msgs,
 		std::vector<common_chat_msg>&& tail_msgs,
 		std::vector<common_chat_tool>&& tools,
-		size_t max_tokens
+		size_t max_tokens,
+		bool add_generation_prompt
 	) {
 		const TokenizeCallback tokenize_callback = context_.is_mtmd()
 			? TokenizeCallback([this](std::string_view s) { return estimate_mtmd_tokens(s); })
 			: TokenizeCallback([this](std::string_view s) { return estimate_text_tokens(s); });
 
-		common_chat_templates_inputs result = { .add_bos = true, .add_eos = true };
+		common_chat_templates_inputs result = { .add_generation_prompt = add_generation_prompt, .add_bos = true, .add_eos = true };
 		common_chat_templates_inputs temporary_inputs = { .messages = std::vector<common_chat_msg>(1), .add_generation_prompt = false };
 		size_t n_cap = context_.get_n_ctx() - max_tokens;
 

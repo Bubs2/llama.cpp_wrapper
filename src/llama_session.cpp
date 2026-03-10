@@ -89,7 +89,14 @@ namespace llama_server {
 
 		// Prune and tokenize
 		std::vector<IDChunksPtr> chunks;
-		try { chunks = (*input_encoder_)(std::move(llama_head_msgs), std::move(llama_tail_msgs), std::move(llama_tools), max_tokens); }
+		try {
+			chunks = (*input_encoder_)(
+			std::move(llama_head_msgs),
+			std::move(llama_tail_msgs),
+			std::move(llama_tools),
+			max_tokens,
+			gen_config.add_generation_prompt);
+		}
 		catch (const LlamaException& e) {
 			log_error(e.what());
 			return;
