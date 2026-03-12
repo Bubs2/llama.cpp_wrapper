@@ -10,6 +10,7 @@ FetchContent_MakeAvailable(json)
 
 add_executable(${TEST_TARGET} main.cpp)
 add_custom_command(TARGET test_mtmd POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/test/test_mtmd/image/"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CMAKE_CURRENT_SOURCE_DIR}/image/prac_back.png"
     "${CMAKE_CURRENT_SOURCE_DIR}/image/frame.ppm"

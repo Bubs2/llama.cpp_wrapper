@@ -4,15 +4,14 @@ project(llama_server VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 
 option(LLAMA_SERVER_BUILD_TESTS "Build tests" OFF)
+option(LLAMA_SERVER_BUILD_LOCAL_SERVER "Build local server" OFF)
 
 set(LLAMA_BUILD_TOOLS    ON  CACHE BOOL "" FORCE)
 set(LLAMA_BUILD_COMMON   ON  CACHE BOOL "" FORCE)
+set(LLAMA_BUILD_SERVER   ON  CACHE BOOL "" FORCE)
 
 if (NOT DEFINED LLAMA_BUILD_EXAMPLES)
     set(LLAMA_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-endif()
-if (NOT DEFINED LLAMA_BUILD_SERVER)
-    set(LLAMA_BUILD_SERVER   OFF CACHE BOOL "" FORCE)
 endif()
 if (NOT DEFINED LLAMA_BUILD_TESTS)
     set(LLAMA_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
@@ -36,7 +35,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(spdlog)
 
-include(FetchContent)
 FetchContent_Declare(
     re2
     GIT_REPOSITORY https://github.com/google/re2.git
@@ -51,6 +49,10 @@ if(LLAMA_SERVER_BUILD_TESTS)
     add_subdirectory(test/test_mtmd)
     add_subdirectory(test/test_cache)
     add_subdirectory(test/test_grammar)
+endif()
+
+if(LLAMA_SERVER_BUILD_LOCAL_SERVER)
+    add_subdirectory(server)
 endif()
 
 set(LIB_SOURCES
@@ -116,9 +118,9 @@ target_include_directories(${PROJECT_NAME}
 
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/internal
-    "third_party/llama.cpp"
-    "third_party/llama.cpp/common"
-    "third_party/llama.cpp/tools/mtmd"
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/llama.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/llama.cpp/common
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/llama.cpp/tools/mtmd
 )
 
 target_link_libraries(${PROJECT_NAME}
